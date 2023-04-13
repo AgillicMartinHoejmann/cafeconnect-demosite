@@ -1,18 +1,6 @@
 <script lang="ts">
-	import {
-		Button,
-		ButtonSet,
-		Column,
-		Grid,
-		Row,
-		StructuredList,
-		StructuredListBody,
-		StructuredListCell,
-		StructuredListHead,
-		StructuredListRow,
-		TextInput
-	} from 'carbon-components-svelte';
 	import type { PageServerData } from './$types';
+	import PersonDataForm from '$lib/components/PersonDataForm.svelte';
 
 	export let data: PageServerData;
 
@@ -21,7 +9,9 @@
 	}
 </script>
 
-<form method="post">
+<PersonDataForm person={data} />
+
+<!-- <form method="post">
 	<Grid>
 		<Row padding>
 			<Column>
@@ -62,10 +52,10 @@
 			</Column>
 		</Row>
 	</Grid>
-</form>
+</form> -->
 
 {#if data?.history}
-	<Grid>
+	<!-- <Grid>
 		<Row padding>
 			<Column>
 				<StructuredList selection>
@@ -106,5 +96,5 @@
 				</StructuredList>
 			</Column>
 		</Row>
-	</Grid>
+	</Grid> -->
 {/if}

@@ -11,7 +11,10 @@
 		ToolbarContent,
 		ToolbarSearch
 	} from 'carbon-components-svelte';
-	import type { DataTableRow } from 'carbon-components-svelte/types/DataTable/DataTable.svelte';
+	// import type { DataTableRow } from 'carbon-components-svelte/types/DataTable/DataTable.svelte';
+	import { Table, tableMapperValues } from '@skeletonlabs/skeleton';
+	import type { TableSource } from '@skeletonlabs/skeleton';
+
 	import type { PageServerData } from './$types';
 
 	export let data: PageServerData;
@@ -33,12 +36,26 @@
 		});
 	}
 
-	function handleClick(item: CustomEvent<DataTableRow>) {
-		goto(`/admin/gdt/${item.detail.id}`);
+	const tableSimple: TableSource = {
+		// A list of heading labels.
+		head: ['ID', 'Date', 'Title', 'Category'],
+		// The data visibly shown in your table body UI.
+		body: tableMapperValues(result, ['id', 'date', 'title', 'category']),
+		// Optional: The data returned when interactive is enabled and a row is clicked.
+		meta: tableMapperValues(result, ['id']),
+		// Optional: A list of footer labels.
+		foot: ['Total', '', '<code>31.7747</code>']
+	};
+
+	function handleClick(item) {
+		// selectedRowIds.push(item.detail[0]);
+		// goto(`/admin/gdt/${item.detail[0]}`);
 	}
 </script>
 
-<Grid>
+<Table source={tableSimple} interactive={true} on:selected={(item) => handleClick(item)} />
+
+<!-- <Grid>
 	<Row padding>
 		<Column>
 			<DataTable
@@ -78,4 +95,4 @@
 			</DataTable>
 		</Column>
 	</Row>
-</Grid>
+</Grid> -->
