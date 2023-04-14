@@ -1,4 +1,7 @@
 <script langt="ts">
+	/**
+	 * @type {{ recipient: { FIRSTNAME: any; LASTNAME: any; CUSTOMER_ID: any; SHOPIFY_ID: any; EMAIL: any; MSISDN: any; ADDRESS: any; CITY: any; POSTAL_CODE: any; }; }}
+	 */
 	export let person;
 </script>
 

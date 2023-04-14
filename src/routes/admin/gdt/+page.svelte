@@ -1,29 +1,12 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import {
-		Button,
-		Column,
-		DataTable,
-		Grid,
-		Row,
-		Toolbar,
-		ToolbarBatchActions,
-		ToolbarContent,
-		ToolbarSearch
-	} from 'carbon-components-svelte';
-	// import type { DataTableRow } from 'carbon-components-svelte/types/DataTable/DataTable.svelte';
-	import { Table, tableMapperValues } from '@skeletonlabs/skeleton';
-	import type { TableSource } from '@skeletonlabs/skeleton';
+	import { DataHandler, Datatable, Th, ThFilter } from '@vincjo/datatables';
 
-	import type { PageServerData } from './$types';
+	import { fade } from 'svelte/transition';
 
-	export let data: PageServerData;
-
-	let active = false;
-	let selectedRowIds: string[] = [];
+	export let data;
 
 	let result: Array<any> = [];
-	let filteredRowIds: string[] = [];
 	if (data.gdtRows) {
 		result = data.gdtRows.map((item: { ID: any; DATE: any; TITLE: any; CATEGORY: any }) => {
 			return {
@@ -36,63 +19,93 @@
 		});
 	}
 
-	const tableSimple: TableSource = {
-		// A list of heading labels.
-		head: ['ID', 'Date', 'Title', 'Category'],
-		// The data visibly shown in your table body UI.
-		body: tableMapperValues(result, ['id', 'date', 'title', 'category']),
-		// Optional: The data returned when interactive is enabled and a row is clicked.
-		meta: tableMapperValues(result, ['id']),
-		// Optional: A list of footer labels.
-		foot: ['Total', '', '<code>31.7747</code>']
-	};
-
-	function handleClick(item) {
-		// selectedRowIds.push(item.detail[0]);
-		// goto(`/admin/gdt/${item.detail[0]}`);
+	const handler = new DataHandler(result, { rowsPerPage: 50 });
+	const rows = handler.getRows();
+	const selected = handler.getSelected();
+	const isAllSelected = handler.isAllSelected();
+	function opentGdtRow(row: string) {
+		goto(`/admin/gdt/${row}`);
 	}
 </script>
 
-<Table source={tableSimple} interactive={true} on:selected={(item) => handleClick(item)} />
-
-<!-- <Grid>
-	<Row padding>
-		<Column>
-			<DataTable
-				on:click:row={(item) => handleClick(item)}
-				selectable
-				batchSelection={active}
-				bind:selectedRowIds
-				sortable
-				headers={[
-					{ key: 'recordId', value: 'ID' },
-					{ key: 'date', value: 'Date' },
-					{ key: 'title', value: 'Title' },
-					{ key: 'category', value: 'Category' }
-				]}
-				rows={result}
+{#if $selected.length > 0}
+	<aside class="alert variant-filled m-12" transition:fade|local={{ duration: 400 }}>
+		<!-- Icon -->
+		<div>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				fill="none"
+				viewBox="0 0 24 24"
+				stroke-width="1.5"
+				stroke="currentColor"
+				class="w-6 h-6"
 			>
-				<Toolbar>
-					<ToolbarBatchActions
-						bind:active
-						on:cancel={(e) => {
-							e.preventDefault();
-							active = false;
-						}}
-					>
-						<form action="?/deleteGdtRecords" method="post">
-							<input hidden name="selectedRowIds" value={selectedRowIds} />
-							<Button type="submit" disabled={selectedRowIds.length === 0}>Delete</Button>
-						</form>
-					</ToolbarBatchActions>
-					<ToolbarContent>
-						<ToolbarSearch persistent value="" shouldFilterRows bind:filteredRowIds />
-						<form action="?/createGdtRecord" method="post">
-							<Button type="submit">Create</Button>
-						</form>
-					</ToolbarContent>
-				</Toolbar>
-			</DataTable>
-		</Column>
-	</Row>
-</Grid> -->
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+				/>
+			</svg>
+		</div>
+		<!-- Message -->
+		<div class="alert-message">
+			<h3>Are you sure you wish to delete these records?</h3>
+			<p>IDs: {$selected}</p>
+		</div>
+		<!-- Actions -->
+		<div class="alert-actions">
+			<form action="?/deleteGdtRecords" method="post">
+				<input hidden name="selected" value={$selected} />
+				<button class="btn btn variant-filled-warning" type="submit">Delete</button>
+			</form>
+		</div>
+	</aside>
+{/if}
+
+<Datatable {handler} search={false} rowsPerPage={false}>
+	<div class="table-container">
+		<table class="table table-hover">
+			<thead class="">
+				<tr class="">
+					<th class="selection">
+						<input
+							type="checkbox"
+							on:click={() => handler.selectAll('id', 'all')}
+							checked={$isAllSelected}
+						/>
+					</th>
+					<Th {handler} orderBy="id">ID</Th>
+					<Th {handler} orderBy="date">Date</Th>
+					<Th {handler} orderBy="title">Title</Th>
+					<Th {handler} orderBy="category">Category</Th>
+				</tr>
+				<tr class="">
+					<th />
+					<ThFilter {handler} filterBy="id" />
+					<ThFilter {handler} filterBy="data" />
+					<ThFilter {handler} filterBy="title" />
+					<ThFilter {handler} filterBy="category" />
+				</tr>
+			</thead>
+			<tbody>
+				{#each $rows as row}
+					<tr class:table-row-checked={$selected.includes(row.id)}>
+						<td>
+							<input
+								type="checkbox"
+								on:click={() => handler.select(row.id)}
+								checked={$selected.includes(row.id)}
+							/>
+						</td>
+						<td>{row.id}</td>
+						<td>{row.date}</td>
+						<td on:click={() => opentGdtRow(row.id)} on:keypress={() => opentGdtRow(row.id)}
+							>{row.title}</td
+						>
+						<td>{row.category}</td>
+					</tr>
+				{/each}
+			</tbody>
+		</table>
+	</div>
+</Datatable>
