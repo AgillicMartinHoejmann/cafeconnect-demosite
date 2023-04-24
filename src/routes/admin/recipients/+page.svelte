@@ -37,7 +37,7 @@
 
 <Toast />
 {#if $selected.length > 0}
-	<aside class="alert variant-filled m-12" transition:fade|local={{ duration: 400 }}>
+	<aside class="alert variant-filled-warning m-12" transition:fade|local={{ duration: 400 }}>
 		<!-- Icon -->
 		<div>
 			<svg
