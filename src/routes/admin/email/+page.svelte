@@ -1,34 +1,10 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import {
-		Button,
-		Column,
-		Grid,
-		Row,
-		StructuredList,
-		StructuredListBody,
-		StructuredListCell,
-		StructuredListHead,
-		StructuredListRow,
-		TextArea,
-		TextInput,
-		ToastNotification
-	} from 'carbon-components-svelte';
-	import { persisted } from 'svelte-local-storage-store';
-	import type { ActionData, PageData } from './$types';
 	import EmailForm from '$lib/components/EmailForm.svelte';
+	import { preferences } from '../../../lib/stores/emailStore';
+	import type { ActionData, PageData } from './$types';
 
 	export let form: ActionData;
 	export let data: PageData;
-
-	const preferences = persisted('preferences', {
-		subjectLine: '',
-		header: '',
-		body: ''
-	});
-
-	let header: string = 'This is an example of a header as it will appear in the email';
-	let body: string = 'This is an example of what the email body will look like';
 
 	function handleClick(emailUrl: Location | (string & Location)) {
 		window.location = emailUrl;
@@ -47,7 +23,7 @@
 		<p
 			style="margin: 0; text-align: center; font-weight: 800 !important; line-height: 1.2 !important; font-size: 32px !important;width: 620px; font-family:Arial, Helvetica, sans-serif !important"
 		>
-			{$preferences.header || header}
+			{$preferences.header}
 		</p>
 	</div>
 
@@ -55,12 +31,12 @@
 		<p
 			style="margin: 0; text-align: center; font-weight: 400 !important; line-height: 1.5 !important; font-size: 13px !important;width: 620px; font-family:Arial, Helvetica, sans-serif !important"
 		>
-			{$preferences.body || body}
+			{$preferences.body}
 		</p>
 	</div>
 </div>
 
-<EmailForm emailProperties={preferences} />
+<EmailForm />
 
 <!-- <form
 	method="post"
