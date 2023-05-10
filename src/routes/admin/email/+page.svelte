@@ -16,6 +16,7 @@
 	} from 'carbon-components-svelte';
 	import { persisted } from 'svelte-local-storage-store';
 	import type { ActionData, PageData } from './$types';
+	import EmailForm from '$lib/components/EmailForm.svelte';
 
 	export let form: ActionData;
 	export let data: PageData;
@@ -34,47 +35,34 @@
 	}
 </script>
 
-<Grid>
-	<Row>
-		<Column
-			><h3>Preview of Email Content</h3>
-			<p>(font size and line-breaks reflect email template)</p></Column
+<div class="container flex items-center flex-col">
+	<div style="padding: 0">
+		<img
+			style="width: 100%; max-width: 660px; border: 0 none"
+			src="https://coffee-stag.agillic.eu/agillicadmin/forward/bcmportlet/bcmresource/media/resources/Templates%20assets/email/default/img/colombian-huila-san-agustin-2x.jpg"
+		/>
+	</div>
+
+	<div style="display: flex; justify-content: center; padding: 10px;">
+		<p
+			style="margin: 0; text-align: center; font-weight: 800 !important; line-height: 1.2 !important; font-size: 32px !important;width: 620px; font-family:Arial, Helvetica, sans-serif !important"
 		>
-	</Row>
-	<Row>
-		<Column
-			><div style="text-align: center; padding: 0">
-				<img
-					style="width: 100%; max-width: 660px; border: 0 none"
-					src="https://coffee-stag.agillic.eu/agillicadmin/forward/bcmportlet/bcmresource/media/resources/Templates%20assets/email/default/img/colombian-huila-san-agustin-2x.jpg"
-				/>
-			</div>
-		</Column>
-	</Row>
-	<Row>
-		<Column
-			><div style="display: flex; justify-content: center; padding: 10px;">
-				<p
-					style="margin: 0; text-align: center; font-weight: 800 !important; line-height: 1.2 !important; font-size: 32px !important;width: 620px; font-family:Arial, Helvetica, sans-serif !important"
-				>
-					{$preferences.header || header}
-				</p>
-			</div></Column
+			{$preferences.header || header}
+		</p>
+	</div>
+
+	<div style="display: flex; justify-content: center; padding: 10px;">
+		<p
+			style="margin: 0; text-align: center; font-weight: 400 !important; line-height: 1.5 !important; font-size: 13px !important;width: 620px; font-family:Arial, Helvetica, sans-serif !important"
 		>
-	</Row>
-	<Row>
-		<Column
-			><div style="display: flex; justify-content: center; padding: 10px;">
-				<p
-					style="margin: 0; text-align: center; font-weight: 400 !important; line-height: 1.5 !important; font-size: 13px !important;width: 620px; font-family:Arial, Helvetica, sans-serif !important"
-				>
-					{$preferences.body || body}
-				</p>
-			</div></Column
-		>
-	</Row>
-</Grid>
-<form
+			{$preferences.body || body}
+		</p>
+	</div>
+</div>
+
+<EmailForm emailProperties={preferences} />
+
+<!-- <form
 	method="post"
 	action="?/sendTestEmail"
 	use:enhance={() => {
@@ -128,9 +116,9 @@
 			</Column>
 		</Row>
 	</Grid>
-</form>
+</form> -->
 
-<form
+<!-- <form
 	method="post"
 	action="?/updateEmailData"
 	use:enhance={() => {
@@ -177,9 +165,9 @@
 			</Column>
 		</Row>
 	</Grid>
-</form>
+</form> -->
 
-{#if data?.history}
+<!-- {#if data?.history}
 	<Grid>
 		<Row padding>
 			<Column>
@@ -222,4 +210,4 @@
 			</Column>
 		</Row>
 	</Grid>
-{/if}
+{/if} -->

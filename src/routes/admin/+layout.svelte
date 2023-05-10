@@ -1,10 +1,10 @@
 <script lang="ts">
-    import type {LayoutData} from './$types';
-    import PageTransition from "../../lib/components/PageTransition.svelte";
+	import type { LayoutData } from './$types';
+	import PageTransition from '../../lib/components/PageTransition.svelte';
 
-    export let data: LayoutData;
+	export let data: LayoutData;
 </script>
 
 <PageTransition pathname={data.pathname}>
-    <slot/>
+	<div class="container mx-auto p-10"><slot /></div>
 </PageTransition>
