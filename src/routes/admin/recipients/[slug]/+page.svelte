@@ -3,18 +3,47 @@
 		Button,
 		ButtonSet,
 		Column,
+		DataTable,
 		Grid,
 		Row,
-		StructuredList,
-		StructuredListBody,
-		StructuredListCell,
-		StructuredListHead,
-		StructuredListRow,
-		TextInput
+		TextInput,
+		Toolbar,
+		ToolbarContent,
+		ToolbarSearch
 	} from 'carbon-components-svelte';
 	import type { PageServerData } from './$types';
 
 	export let data: PageServerData;
+
+	let result: Array<any> = [];
+	let filteredRowIds: string[] = [];
+	if (data.recipientHistory) {
+		result = data.recipientHistory.map(
+			(item: {
+				ID: string;
+				communicationId: any;
+				communicationType: any;
+				executionTimestamp: any;
+				additionalFields: {
+					openedTimestamp: any;
+					storedEmailURL: any;
+					bounced: any;
+					clickedTimeStamp: string;
+				};
+			}) => {
+				return {
+					id: item.ID,
+					communicationId: item.communicationId,
+					type: item.communicationType,
+					date: item.executionTimestamp,
+					opened: item.additionalFields.openedTimestamp,
+					emailUrl: item.additionalFields.storedEmailURL,
+					bounced: item.additionalFields.bounced,
+					clicked: item.additionalFields.clickedTimeStamp
+				};
+			}
+		);
+	}
 
 	function handleClick(emailUrl: Location | (string & Location)) {
 		window.location = emailUrl;
@@ -64,46 +93,29 @@
 	</Grid>
 </form>
 
-{#if data?.history}
+{#if data?.recipientHistory}
 	<Grid>
 		<Row padding>
 			<Column>
-				<StructuredList selection>
-					<StructuredListHead>
-						<StructuredListRow head>
-							<StructuredListCell head>Name</StructuredListCell>
-							<StructuredListCell head>Type</StructuredListCell>
-							<StructuredListCell head>Sent</StructuredListCell>
-							<StructuredListCell head>Opened</StructuredListCell>
-							<StructuredListCell head>clicked</StructuredListCell>
-							<StructuredListCell head>Bounced</StructuredListCell>
-						</StructuredListRow>
-					</StructuredListHead>
-					<StructuredListBody>
-						{#each data.history as item}
-							<StructuredListRow on:click={() => handleClick(item.additionalFields.storedEmailURL)}>
-								<StructuredListCell>
-									{item.communicationId}
-								</StructuredListCell>
-								<StructuredListCell>
-									{item.communicationType}
-								</StructuredListCell>
-								<StructuredListCell>
-									{item.executionTimestamp}
-								</StructuredListCell>
-								<StructuredListCell>
-									{item.additionalFields.openedTimestamp}
-								</StructuredListCell>
-								<StructuredListCell>
-									{item.additionalFields.clickedTimeStamp}
-								</StructuredListCell>
-								<StructuredListCell>
-									{item.additionalFields.bounced}
-								</StructuredListCell>
-							</StructuredListRow>
-						{/each}
-					</StructuredListBody>
-				</StructuredList>
+				<DataTable
+					sortable
+					headers={[
+						{ key: 'communicationId', value: 'ID' },
+						{ key: 'date', value: 'Date' },
+						{ key: 'type', value: 'Channel' },
+						{ key: 'opened', value: 'Opened' },
+						{ key: 'clicked', value: 'Clicked' },
+						{ key: 'bounced', value: 'Bounced' }
+					]}
+					on:click:row={(item) => handleClick(item.detail.emailUrl)}
+					rows={result}
+				>
+					<Toolbar>
+						<ToolbarContent>
+							<ToolbarSearch persistent value="" shouldFilterRows bind:filteredRowIds />
+						</ToolbarContent>
+					</Toolbar>
+				</DataTable>
 			</Column>
 		</Row>
 	</Grid>
