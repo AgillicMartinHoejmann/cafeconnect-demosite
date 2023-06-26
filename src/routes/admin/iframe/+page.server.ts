@@ -10,7 +10,7 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 
 	const timestamp = '1719044450';
 
-	const salt = 'EvzcbfUyNZNX2Q2VotyTwkhwYtoIK6';
+	const salt = 'owL7tSfnhJfZ2ItR2mOrZhzoJrzLM3';
 
 	const agillicIdTimestampSecretSalt = agillicId + ':' + timestamp + salt;
 
