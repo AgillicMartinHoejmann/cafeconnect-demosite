@@ -9,7 +9,7 @@
 	<Row padding>
 		<Column>
 			<iframe
-				src="https://support-stag.agillic.eu/web/namedservice/kgl_permissions?lgn_uid={data.lgn_uid}"
+				src="https://web.cafeconnect.net/web/namedservice/profilemanagement?lgn_uid={data.lgn_uid}"
 				title="iframe"
 				width="700"
 				height="500"
