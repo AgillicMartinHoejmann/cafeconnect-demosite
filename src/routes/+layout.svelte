@@ -6,7 +6,7 @@
 			var scr = d.getElementsByTagName("script")[0], f = d.createElement('iframe');
 			f.src = "javascript:''"; f.style.display = "none"; scr.parentNode.insertBefore(f, scr); f.contentWindow.name = "ag:scrf";
 			var d2 = f.contentWindow.document,fn='write';
-			d2.open()[fn]("<body onload=\"var d=document,s=d.createElement('script');s.id='ag:trackscript.1';s.src='//coffee.agilliclabs.com/tracking/track.js';d.body.appendChild(s);\">");
+			d2.open()[fn]("<body onload=\"var d=document,s=d.createElement('script');s.id='ag:trackscript.1';s.src='//web.cafeconnect.net/tracking/track.js';d.body.appendChild(s);\">");
 			d2.close();
 		}catch(e){}})(document);
 	</script>
