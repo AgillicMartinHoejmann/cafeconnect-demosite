@@ -8,7 +8,7 @@
 <Grid fullwidth style="display: flex; justify-content: center">
     <Row>
         <Column>
-            <h2>Put "?lgn_uid=" + AGILLIC_ID in the url</h2>
+            <h2>Put "?agid=" + AGILLIC_ID in the url</h2>
         </Column>
     </Row>
 </Grid>
